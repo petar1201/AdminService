@@ -2,6 +2,7 @@ package com.example.AdminService.services;
 
 
 import com.example.AdminService.entities.Employee;
+import com.example.AdminService.generators.ShaEncryptionGenerator;
 import com.example.AdminService.interfaces.repositories.EmployeeRepository;
 import com.example.AdminService.interfaces.service.EmployeeInterface;
 import com.opencsv.exceptions.CsvValidationException;
@@ -53,12 +54,13 @@ public class EmployeeService implements EmployeeInterface {
     @Override
     public void addSingleEmployee(String email, String password) {
         //TODO ENCRIPTION
-        employeeRepository.saveAndFlush(new Employee(email,password));
+        employeeRepository.saveAndFlush(new Employee(ShaEncryptionGenerator.hashString(email),
+                ShaEncryptionGenerator.hashString(password)));
     }
 
     @Override
     public void removeEmployee(String email) {
-        Optional<Employee> employee = employeeRepository.findById(email);
+        Optional<Employee> employee = employeeRepository.findById(ShaEncryptionGenerator.hashString(email));
         if(employee.isPresent()) {
             if(employee.get().isActive()) {
                 employee.get().setActive(false);

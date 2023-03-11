@@ -2,6 +2,8 @@ package com.example.AdminService.services;
 
 import com.example.AdminService.entities.Admin;
 import com.example.AdminService.entities.Employee;
+import com.example.AdminService.generators.ApiKeyGenerator;
+import com.example.AdminService.generators.TokenGenerator;
 import com.example.AdminService.interfaces.repositories.AdminRepository;
 import com.example.AdminService.interfaces.repositories.EmployeeRepository;
 import com.example.AdminService.interfaces.service.AdminInterface;
@@ -19,8 +21,8 @@ public class AdminService implements AdminInterface {
 
 
     @Override
-    public void addAdmin(String username, String password) {
-        adminRepository.saveAndFlush(new Admin(username, password));
+    public void addAdmin() {
+        adminRepository.saveAndFlush(new Admin(ApiKeyGenerator.generateApiKey(), TokenGenerator.generateToken() ));
     }
 
     @Override

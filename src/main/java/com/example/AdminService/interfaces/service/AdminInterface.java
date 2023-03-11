@@ -3,7 +3,7 @@ import com.example.AdminService.entities.Admin;
 
 public interface AdminInterface {
 
-    public void addAdmin(String username, String Password);
+    public void addAdmin();
 
     public void removeAdmin(String username);
 

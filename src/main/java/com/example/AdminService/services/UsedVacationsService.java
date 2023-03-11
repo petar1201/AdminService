@@ -2,6 +2,7 @@ package com.example.AdminService.services;
 
 import com.example.AdminService.entities.Employee;
 import com.example.AdminService.entities.UsedVacations;
+import com.example.AdminService.generators.ShaEncryptionGenerator;
 import com.example.AdminService.interfaces.repositories.EmployeeRepository;
 import com.example.AdminService.interfaces.repositories.UsedVacationsRepository;
 import com.example.AdminService.interfaces.service.UsedVacationsInterface;
@@ -33,7 +34,6 @@ public class UsedVacationsService implements UsedVacationsInterface{
 
     @Autowired
     private VacationsService vacationsService;
-
 
     @Override
     public void addUsedDaysPerYearPerEmployee(String path) {
@@ -69,8 +69,9 @@ public class UsedVacationsService implements UsedVacationsInterface{
     }
 
     @Override
-    public void addSingleRow(String email, int year1, int month1, int day1, int year2, int month2, int day2) {
-        Optional<Employee> employee = employeeRepository.findById(email);
+    public void addSingleRow(String emaill, int year1, int month1, int day1, int year2, int month2, int day2) {
+        String email = ShaEncryptionGenerator.hashString(emaill);
+        Optional<Employee> employee = employeeRepository.findById(ShaEncryptionGenerator.hashString(email));
         if(employee.isPresent()){
             Date startDate = createDate(year1, month1, day1);
             Date endDate = createDate(year2, month2, day2);

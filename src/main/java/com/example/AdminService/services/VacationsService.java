@@ -3,6 +3,7 @@ package com.example.AdminService.services;
 import com.example.AdminService.entities.Employee;
 import com.example.AdminService.entities.Vacations;
 import com.example.AdminService.entities.VacationsPK;
+import com.example.AdminService.generators.ShaEncryptionGenerator;
 import com.example.AdminService.interfaces.repositories.EmployeeRepository;
 import com.example.AdminService.interfaces.repositories.VacationsRepository;
 import com.example.AdminService.interfaces.service.VacationsInterface;
@@ -58,12 +59,12 @@ public class VacationsService implements VacationsInterface {
 
     @Override
     public void addSingleRow(int year, String email, int days) {
-        Optional<Employee> employee = employeeRepository.findById(email);
+        Optional<Employee> employee = employeeRepository.findById(ShaEncryptionGenerator.hashString(email));
         if(employee.isPresent()){
             Vacations vacations = new Vacations();
             VacationsPK vacationsPK = new VacationsPK();
             vacationsPK.setYear(year);
-            vacationsPK.setEmail(email);
+            vacationsPK.setEmail(ShaEncryptionGenerator.hashString(email));
             vacations.setVacationsPK(vacationsPK);
             vacations.setEmployee(employee.get());
             vacations.setTotalDays(days);
@@ -74,7 +75,8 @@ public class VacationsService implements VacationsInterface {
     }
 
     @Override
-    public void changeUsedDaysForYear(String email, int year, int days) {
+    public void changeUsedDaysForYear(String emaill, int year, int days) {
+        String email = ShaEncryptionGenerator.hashString(emaill);
         Optional<Employee> employee = employeeRepository.findById(email);
         if(employee.isPresent()){
 

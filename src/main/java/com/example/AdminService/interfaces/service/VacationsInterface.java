@@ -6,6 +6,6 @@ public interface VacationsInterface {
 
     public void addSingleRow(int year, String email, int days);
 
-    public void changeUsedDaysForYear(String email, int year, int days);
+    public void changeUsedDaysForYear(String emaill, int year, int days);
 
 }
