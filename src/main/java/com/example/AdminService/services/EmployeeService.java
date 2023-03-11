@@ -28,24 +28,22 @@ public class EmployeeService implements EmployeeInterface {
     @Override
     public void addEmployeeProfiles(String path) {
 
-        //String csvFile = "../../../employee_profiles.csv";
+       // String csvFile = "C:\\Users\\petar\\Desktop\\TehnicalTaskRBT\\Technical assignment\\Samples\\employee_profiles.csv";
 
-        try (CSVReader reader = new CSVReader(new FileReader(path))) {
-            String[] nextLine;
-            while ((nextLine = reader.readNext()) != null) {
-                String email = nextLine[0];
-                String password = nextLine[1];
+        try{
+            Scanner sc = new Scanner(new File(path));
+            sc.useDelimiter("\n");
+            while (sc.hasNext())  //returns a boolean value
+            {   String line = sc.next();
+                String email = line.split(",")[0];
+                String password = line.split(",")[1];
                 if(email.equals("Employee Email"))continue;
                 addSingleEmployee(email, password);
             }
+            sc.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-        }catch (CsvValidationException e) {
-            e.printStackTrace();
         }
-
         //TODO THROW WHEN ERROR
 
 
@@ -54,8 +52,10 @@ public class EmployeeService implements EmployeeInterface {
     @Override
     public void addSingleEmployee(String email, String password) {
         //TODO ENCRIPTION
-        employeeRepository.saveAndFlush(new Employee(ShaEncryptionGenerator.hashString(email),
-                ShaEncryptionGenerator.hashString(password)));
+        Employee employee = new Employee(ShaEncryptionGenerator.hashString(email),
+                ShaEncryptionGenerator.hashString(password));
+        employee.setActive(true);
+        employeeRepository.saveAndFlush(employee);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class EmployeeService implements EmployeeInterface {
         if(employee.isPresent()) {
             if(employee.get().isActive()) {
                 employee.get().setActive(false);
-                employeeRepository.save(employee.get());
+                employeeRepository.saveAndFlush(employee.get());
             }
         }
         //TODO ERROR TRYING TO DELETE EMPLOYEE, EMPLOYEE DOESNT EXIST

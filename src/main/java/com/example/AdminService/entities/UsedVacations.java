@@ -6,76 +6,66 @@
 package com.example.AdminService.entities;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
+import jakarta.persistence.*;
 import jakarta.annotation.Nonnull;
-import jakarta.persistence.Basic;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-
 
 /**
  *
  * @author petar
  */
 @Entity
-@Table(name = "usedVacations")
+@Table(name = "used_vacations")
 @NamedQueries({
         @NamedQuery(name = "UsedVacations.findAll", query = "SELECT u FROM UsedVacations u"),
-        @NamedQuery(name = "UsedVacations.findByEmail", query = "SELECT u FROM UsedVacations u WHERE u.email = :email"),
+        @NamedQuery(name = "UsedVacations.findByIdUsed", query = "SELECT u FROM UsedVacations u WHERE u.idUsed = :idUsed"),
         @NamedQuery(name = "UsedVacations.findByStartDate", query = "SELECT u FROM UsedVacations u WHERE u.startDate = :startDate"),
         @NamedQuery(name = "UsedVacations.findByEndDate", query = "SELECT u FROM UsedVacations u WHERE u.endDate = :endDate")})
 public class UsedVacations implements Serializable {
 
+    public static long id = 1;
+
     private static final long serialVersionUID = 1L;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Id
+    @GeneratedValue
     @Basic(optional = false)
     @Nonnull
-    //@Size(min = 1, max = 40)
-    @Column(name = "email")
-    private String email;
+    @Column(name = "id_used")
+    private Long idUsed;
     @Basic(optional = false)
     @Nonnull
-    @Column(name = "startDate")
+    @Column(name = "start_date")
     @Temporal(TemporalType.DATE)
     private Date startDate;
     @Basic(optional = false)
     @Nonnull
-    @Column(name = "endDate")
+    @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
     private Date endDate;
-    @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
-    @OneToOne(optional = false)
-    private Employee employee;
+    @JoinColumn(name = "email", referencedColumnName = "email")
+    @ManyToOne(optional = false)
+    private Employee email;
 
     public UsedVacations() {
     }
 
-    public UsedVacations(String email) {
-        this.email = email;
+    public UsedVacations(Long idUsed) {
+        this.idUsed = idUsed;
     }
 
-    public UsedVacations(String email, Date startDate, Date endDate) {
-        this.email = email;
+    public UsedVacations(Long idUsed, Date startDate, Date endDate) {
+        this.idUsed = idUsed;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public String getEmail() {
-        return email;
+    public Long getIdUsed() {
+        return idUsed;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setIdUsed(Long idUsed) {
+        this.idUsed = idUsed;
     }
 
     public Date getStartDate() {
@@ -94,18 +84,18 @@ public class UsedVacations implements Serializable {
         this.endDate = endDate;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public Employee getEmail() {
+        return email;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmail(Employee email) {
+        this.email = email;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (email != null ? email.hashCode() : 0);
+        hash += (idUsed != null ? idUsed.hashCode() : 0);
         return hash;
     }
 
@@ -116,7 +106,7 @@ public class UsedVacations implements Serializable {
             return false;
         }
         UsedVacations other = (UsedVacations) object;
-        if ((this.email == null && other.email != null) || (this.email != null && !this.email.equals(other.email))) {
+        if ((this.idUsed == null && other.idUsed != null) || (this.idUsed != null && !this.idUsed.equals(other.idUsed))) {
             return false;
         }
         return true;
@@ -124,7 +114,7 @@ public class UsedVacations implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.UsedVacations[ email=" + email + " ]";
+        return "entities.UsedVacations[ idUsed=" + idUsed + " ]";
     }
 
 }

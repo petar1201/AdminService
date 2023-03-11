@@ -11,6 +11,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.Month;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Scanner;
 
 @Service
 public class UsedVacationsService implements UsedVacationsInterface{
@@ -37,58 +39,59 @@ public class UsedVacationsService implements UsedVacationsInterface{
 
     @Override
     public void addUsedDaysPerYearPerEmployee(String path) {
-        try (CSVReader reader = new CSVReader(new FileReader(path))) {
-            String[] nextLine;
-            while ((nextLine = reader.readNext()) != null) {
-                String email = nextLine[0];
-                String startDate = nextLine[1];
-                String endDate = nextLine[2];
-                if(email.equals("Employee"))continue;
-                String[] partsStart = startDate.split(",\\s+");
-                String[] monthDayStart = partsStart[1].split("\\s+");
 
-                String[] partsEnd = endDate.split(",\\s+");
-                String[] monthDayEnd = partsEnd[1].split("\\s+");
-
-                addSingleRow(email, Integer.parseInt(partsStart[2]),
-                        Month.valueOf(monthDayStart[0].toUpperCase()).getValue(),
-                        Integer.parseInt(monthDayStart[1]),
-                        Integer.parseInt(partsEnd[2]),
-                        Month.valueOf(monthDayEnd[0].toUpperCase()).getValue(),
-                        Integer.parseInt(monthDayEnd[1]));
+        try{
+            Scanner sc = new Scanner(new File(path));
+            sc.useDelimiter("\n");
+            while (sc.hasNext())  //returns a boolean value
+            {   String line = sc.next().trim().replaceAll("\n$", "");
+                String[] fields = line.split(",");
+                if(fields[0].equals("Employee"))continue;
+                String email = fields[0];
+                String monthDayS = fields[2].trim();
+                String year1 = fields[3].replaceAll("^\"|\"$", "").trim();
+                String monthDayE = fields[5].trim();
+                String year2 = fields[6].replaceAll("^\"|\"$", "").trim();
+                String monthStart = monthDayS.split(" ")[0];
+                String dayStart = monthDayS.split(" ")[1];
+                String monthEnd = monthDayE.split(" ")[0];
+                String dayEnd = monthDayE.split(" ")[1];
+                addSingleRow(email, Integer.parseInt(year1),
+                        Month.valueOf(monthStart.toUpperCase()).getValue(),
+                        Integer.parseInt(dayStart),
+                        Integer.parseInt(year2),
+                        Month.valueOf(monthEnd.toUpperCase()).getValue(),
+                        Integer.parseInt(dayEnd));
+                //TODO WHAT IF IS NOT PRESENT?
             }
+            sc.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-        }catch (CsvValidationException e) {
-            e.printStackTrace();
         }
-
         //TODO THROW WHEN ERROR
     }
 
     @Override
     public void addSingleRow(String emaill, int year1, int month1, int day1, int year2, int month2, int day2) {
         String email = ShaEncryptionGenerator.hashString(emaill);
-        Optional<Employee> employee = employeeRepository.findById(ShaEncryptionGenerator.hashString(email));
+        Optional<Employee> employee = employeeRepository.findById(email);
         if(employee.isPresent()){
             Date startDate = createDate(year1, month1, day1);
             Date endDate = createDate(year2, month2, day2);
-            if(startDate.compareTo(endDate)>=0){
-                //TODO DO NOTHING IF EQUAL?THROW EXCEPTION?
+            if(startDate.compareTo(endDate)>0){
+                //TODO THROW EXCEPTION?
             }
             else{
                 if(year1==year2) {
-                    vacationsService.changeUsedDaysForYear(email, year1, (int) calcDays(startDate, endDate));
+                    vacationsService.changeUsedDaysForYear(emaill, year1, (int) calcDays(startDate, endDate));
                 }
                 else{
-                    vacationsService.changeUsedDaysForYear(email, year1, (int)calcDays(startDate, createDate(year1,12,31)));
-                    vacationsService.changeUsedDaysForYear(email, year2, (int)calcDays(createDate(year2, 1,1), endDate));
+                   vacationsService.changeUsedDaysForYear(emaill, year1, (int)calcDays(startDate, createDate(year1,12,31)));
+                  vacationsService.changeUsedDaysForYear(emaill, year2, (int)calcDays(createDate(year2, 1,1), endDate));
                 }
                 UsedVacations usedVacations = new UsedVacations();
-                usedVacations.setEmployee(employee.get());
-                usedVacations.setEmail(email);
+                //usedVacations.setIdUsed(UsedVacations.id++);
+                usedVacations.setEmail(employee.get());
                 usedVacations.setStartDate(startDate);
                 usedVacations.setEndDate(endDate);
                 usedVacationsRepository.saveAndFlush(usedVacations);

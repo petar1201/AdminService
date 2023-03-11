@@ -49,8 +49,8 @@ public class Employee implements Serializable {
     @Column(name = "active")
     private boolean active;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "employee")
-    private UsedVacations usedVacations;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "email")
+    private List<UsedVacations> usedVacationsList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
     private List<Vacations> vacationsList;
 
@@ -90,12 +90,12 @@ public class Employee implements Serializable {
         this.password = password;
     }
 
-    public UsedVacations getUsedVacations() {
-        return usedVacations;
+    public List<UsedVacations> getUsedVacationsList() {
+        return usedVacationsList;
     }
 
-    public void setUsedVacations(UsedVacations usedVacations) {
-        this.usedVacations = usedVacations;
+    public void setUsedVacationsList(List<UsedVacations> usedVacationsList) {
+        this.usedVacationsList = usedVacationsList;
     }
 
     public List<Vacations> getVacationsList() {

@@ -12,11 +12,13 @@ import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 @Service
 public class VacationsService implements VacationsInterface {
@@ -32,26 +34,25 @@ public class VacationsService implements VacationsInterface {
 
         int year=-1;
 
-        try (CSVReader reader = new CSVReader(new FileReader(path))) {
-            String[] nextLine;
-            while ((nextLine = reader.readNext()) != null) {
-                String email = nextLine[0];
-                String days = nextLine[1];
+        try{
+            Scanner sc = new Scanner(new File(path));
+            sc.useDelimiter("\n");
+            while (sc.hasNext())  //returns a boolean value
+            {   String nextLine = sc.next();
+                String email = nextLine.split(",")[0];
+                String days = nextLine.split(",")[1];
                 if(email.equals("Employee"))continue;
                 if(email.equals("Vacation year")){
-                    year=Integer.parseInt(days);
+                    year=Integer.parseInt(""+days.charAt(0)+days.charAt(1)+days.charAt(2)+days.charAt(3));
                     continue;
                 }
                 if(year == -1)break;//TODO ERROR FORM OF CSV
-                addSingleRow(year, email, Integer.parseInt(days));
+                addSingleRow(year, email, Integer.parseInt(days.trim().replaceAll("\n$", "")));
                 //TODO WHAT IF IS NOT PRESENT?
             }
+            sc.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-        }catch (CsvValidationException e) {
-            e.printStackTrace();
         }
 
         //TODO THROW WHEN ERROR
@@ -84,7 +85,7 @@ public class VacationsService implements VacationsInterface {
             for(Vacations v: vacations){
                 if(v.getTotalDays()-v.getUsedDays()>=days){
                     v.setUsedDays(v.getUsedDays()+days);
-                    vacationsRepository.save(v);
+                    vacationsRepository.saveAndFlush(v);
                     break;
                 }
                 else{
@@ -103,7 +104,7 @@ public class VacationsService implements VacationsInterface {
                                 vacations1 = vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(curYr, email).get(0);
                                 if(year!=curYr)vacations1.setUsedDays(vacations1.getTotalDays());
                                 else vacations1.setUsedDays(totalDays-(totalDays-usedDays+daysAvailable-days));
-                                vacationsRepository.save(vacations1);
+                                vacationsRepository.saveAndFlush(vacations1);
                             }
                             break;
                         }
