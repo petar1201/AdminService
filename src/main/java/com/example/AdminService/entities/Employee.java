@@ -43,6 +43,12 @@ public class Employee implements Serializable {
    // @Size(min = 1, max = 40)
     @Column(name = "password")
     private String password;
+
+    @Basic(optional = false)
+    @Nonnull
+    @Column(name = "active")
+    private boolean active;
+
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "employee")
     private UsedVacations usedVacations;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
@@ -58,6 +64,14 @@ public class Employee implements Serializable {
     public Employee(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public String getEmail() {

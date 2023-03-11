@@ -42,6 +42,11 @@ public class Admin implements Serializable {
     @Column(name = "password")
     private String password;
 
+    @Basic(optional = false)
+    @Nonnull
+    @Column(name = "active")
+    private boolean active;
+
     public Admin() {
     }
 
@@ -52,6 +57,14 @@ public class Admin implements Serializable {
     public Admin(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public String getUsername() {
