@@ -27,8 +27,11 @@ public class AdminService implements AdminInterface {
     public void removeAdmin(String username) {
         Optional<Admin> admin = adminRepository.findById(username);
         if(admin.isPresent()) {
-            admin.get().setActive(false);
-            adminRepository.save(admin.get());
+            if(admin.get().isActive()) {
+                admin.get().setActive(false);
+                adminRepository.save(admin.get());
+            }
         }
+        //TODO UNEXPECETED ERROR, ADMIN DELETING HIMSELF AND NOT FOUND
     }
 }

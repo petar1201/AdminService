@@ -26,7 +26,6 @@ public class EmployeeService implements EmployeeInterface {
 
     @Override
     public void addEmployeeProfiles(String path) {
-        List<Employee> employeeList = new ArrayList<>();
 
         //String csvFile = "../../../employee_profiles.csv";
 
@@ -36,7 +35,7 @@ public class EmployeeService implements EmployeeInterface {
                 String email = nextLine[0];
                 String password = nextLine[1];
                 if(email.equals("Employee Email"))continue;
-                employeeList.add(new Employee(email, password));
+                addSingleEmployee(email, password);
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + e.getMessage());
@@ -49,11 +48,11 @@ public class EmployeeService implements EmployeeInterface {
         //TODO THROW WHEN ERROR
 
 
-        employeeRepository.saveAllAndFlush(employeeList);
     }
 
     @Override
     public void addSingleEmployee(String email, String password) {
+        //TODO ENCRIPTION
         employeeRepository.saveAndFlush(new Employee(email,password));
     }
 
@@ -61,9 +60,12 @@ public class EmployeeService implements EmployeeInterface {
     public void removeEmployee(String email) {
         Optional<Employee> employee = employeeRepository.findById(email);
         if(employee.isPresent()) {
-            employee.get().setActive(false);
-            employeeRepository.save(employee.get());
+            if(employee.get().isActive()) {
+                employee.get().setActive(false);
+                employeeRepository.save(employee.get());
+            }
         }
+        //TODO ERROR TRYING TO DELETE EMPLOYEE, EMPLOYEE DOESNT EXIST
     }
 
 
