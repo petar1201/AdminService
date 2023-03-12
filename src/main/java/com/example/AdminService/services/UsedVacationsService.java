@@ -62,13 +62,11 @@ public class UsedVacationsService implements UsedVacationsInterface{
                         Integer.parseInt(year2),
                         Month.valueOf(monthEnd.toUpperCase()).getValue(),
                         Integer.parseInt(dayEnd));
-                //TODO WHAT IF IS NOT PRESENT?
             }
             sc.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + e.getMessage());
+            throw new IllegalStateException("File not found: " + e.getMessage());
         }
-        //TODO THROW WHEN ERROR
     }
 
     @Override
@@ -79,26 +77,47 @@ public class UsedVacationsService implements UsedVacationsInterface{
             Date startDate = createDate(year1, month1, day1);
             Date endDate = createDate(year2, month2, day2);
             if(startDate.compareTo(endDate)>0){
-                //TODO THROW EXCEPTION?
+                throw new IllegalStateException("Start date is after End Date");
             }
             else{
-                if(year1==year2) {
-                    vacationsService.changeUsedDaysForYear(emaill, year1, (int) calcDays(startDate, endDate));
+                try {
+                    if (year1 == year2) {
+                        vacationsService.changeUsedDaysForYear(emaill, year1, (int) calcDays(startDate, endDate));
+                    } else {
+                        vacationsService.changeUsedDaysForYear(emaill, year1, (int) calcDays(startDate, createDate(year1, 12, 31)));
+                        vacationsService.changeUsedDaysForYear(emaill, year2, (int) calcDays(createDate(year2, 1, 1), endDate));
+                    }
+                    UsedVacations usedVacations = new UsedVacations();
+                    //usedVacations.setIdUsed(UsedVacations.id++);
+                    usedVacations.setEmail(employee.get());
+                    usedVacations.setStartDate(startDate);
+                    usedVacations.setEndDate(endDate);
+                    usedVacationsRepository.saveAndFlush(usedVacations);
                 }
-                else{
-                   vacationsService.changeUsedDaysForYear(emaill, year1, (int)calcDays(startDate, createDate(year1,12,31)));
-                  vacationsService.changeUsedDaysForYear(emaill, year2, (int)calcDays(createDate(year2, 1,1), endDate));
+                catch(IllegalStateException e){
+                    throw e;
                 }
-                UsedVacations usedVacations = new UsedVacations();
-                //usedVacations.setIdUsed(UsedVacations.id++);
-                usedVacations.setEmail(employee.get());
-                usedVacations.setStartDate(startDate);
-                usedVacations.setEndDate(endDate);
-                usedVacationsRepository.saveAndFlush(usedVacations);
-                //TODO TRY CATCH IF NOT ENOUGH DAYS FOR VACATION?
             }
 
         }
+    }
+
+    private boolean isHoliday(LocalDate date){
+        int day = date.getDayOfMonth();
+        int month = date.getMonthValue();
+        if(month == 1){
+            if(day==1 || day==2 || day == 3 || day == 7)return true;
+        }
+        else if(month == 2){
+            if(day == 15 || day ==16)return true;
+        }
+        else if(month == 5){
+            if(day == 1 || day == 2)return true;
+        }
+        else if(month == 11){
+            if(day == 11) return true;
+        }
+        return false;
     }
 
     @Override
@@ -110,8 +129,7 @@ public class UsedVacationsService implements UsedVacationsInterface{
         for (int i = 0; i < daysBetween; i++) {
             LocalDate date = starttDate.plusDays(i);
             if (date.getDayOfWeek() != DayOfWeek.SATURDAY && date.getDayOfWeek() != DayOfWeek.SUNDAY) {
-                //TODO CHECK IF DATE IS A HOLIDAY(DEFINE HOLIDAYS)
-                businessDays++;
+                if(!isHoliday(date)) businessDays++;
             }
         }
         return businessDays;
@@ -121,7 +139,7 @@ public class UsedVacationsService implements UsedVacationsInterface{
     public Date createDate(int year, int month, int day) {
         LocalDate date = LocalDate.of(year, month, day);
         long millis = date.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
-        Date datum = new Date(millis);//TODO ERROR BAD PARAMETRRS
+        Date datum = new Date(millis);
         return datum;
     }
 

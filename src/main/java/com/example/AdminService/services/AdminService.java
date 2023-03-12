@@ -34,6 +34,8 @@ public class AdminService implements AdminInterface {
                 adminRepository.save(admin.get());
             }
         }
-        //TODO UNEXPECETED ERROR, ADMIN DELETING HIMSELF AND NOT FOUND
+        else{
+            throw new IllegalStateException("UNEXPECETED ERROR, ADMIN DELETING HIMSELF AND NOT FOUND");
+        }
     }
 }

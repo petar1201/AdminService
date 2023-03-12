@@ -42,16 +42,13 @@ public class EmployeeService implements EmployeeInterface {
             }
             sc.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + e.getMessage());
+           throw new IllegalStateException("File not found: " + e.getMessage());
         }
-        //TODO THROW WHEN ERROR
-
 
     }
 
     @Override
     public void addSingleEmployee(String email, String password) {
-        //TODO ENCRIPTION
         Employee employee = new Employee(ShaEncryptionGenerator.hashString(email),
                 ShaEncryptionGenerator.hashString(password));
         employee.setActive(true);
@@ -67,7 +64,9 @@ public class EmployeeService implements EmployeeInterface {
                 employeeRepository.saveAndFlush(employee.get());
             }
         }
-        //TODO ERROR TRYING TO DELETE EMPLOYEE, EMPLOYEE DOESNT EXIST
+        else{
+            throw new IllegalStateException("Employee doesnt exist");
+        }
     }
 
 

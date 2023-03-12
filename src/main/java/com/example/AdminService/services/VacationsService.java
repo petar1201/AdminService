@@ -46,16 +46,13 @@ public class VacationsService implements VacationsInterface {
                     year=Integer.parseInt(""+days.charAt(0)+days.charAt(1)+days.charAt(2)+days.charAt(3));
                     continue;
                 }
-                if(year == -1)break;//TODO ERROR FORM OF CSV
+                if(year == -1)throw new IllegalStateException("Bad header, unknown year");
                 addSingleRow(year, email, Integer.parseInt(days.trim().replaceAll("\n$", "")));
-                //TODO WHAT IF IS NOT PRESENT?
             }
             sc.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + e.getMessage());
+            throw new IllegalStateException("File not found: " + e.getMessage());
         }
-
-        //TODO THROW WHEN ERROR
     }
 
     @Override
@@ -72,7 +69,9 @@ public class VacationsService implements VacationsInterface {
             vacations.setUsedDays(0);
             vacationsRepository.saveAndFlush(vacations);
         }
-        //TODO ELSE ERROR EMPLOYEE DOESNT EXIST
+        else{
+            throw new IllegalStateException("Trying to add vacation days for Employee who doesnt exist");
+        }
     }
 
     @Override
@@ -111,11 +110,10 @@ public class VacationsService implements VacationsInterface {
                         daysAvailable+= totalDays-usedDays;
                         curYr--;
                     }
-                    if(!okay){//TODO NOT ENOUGH DAYS ERROR?
-
+                    if(!okay){
+                        throw new IllegalStateException("Record od new used vacation days cant be added due to inefficient amount of days. Sorry, you need to work:(");
                     }
                 }
-
 
             }
         }

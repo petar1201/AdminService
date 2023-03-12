@@ -90,7 +90,7 @@ public class AdminController {
         String[] start = startDate.split(" ");
 
         String[] end = startDate.split(" ");
-        if(start.length!=3 || end.length!=3)throw new RuntimeException("Date should be in dd mm yyyy");
+        if(start.length!=3 || end.length!=3)throw new IllegalStateException("Date should be in dd mm yyyy");
         int year1, month1, day1,year2,month2, day2;
         try {
             year1 = Integer.parseInt(start[2]);
@@ -101,7 +101,7 @@ public class AdminController {
             day2 = Integer.parseInt(end[0]);
         }
         catch(NumberFormatException e){
-            throw new RuntimeException("Date should be in dd mm yy where d,m,y are integers only");
+            throw new IllegalStateException("Date should be in dd mm yy where d,m,y are integers only");
         }
         usedVacationsService.addSingleRow(email,year1,month1,day1,year2,month2,day2);
         return "New data for Employee " + email + " loaded";
