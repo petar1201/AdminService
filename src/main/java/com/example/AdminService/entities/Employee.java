@@ -18,9 +18,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.annotation.Nonnull;
+
 /**
- *
- * @author petar
+ * The Employee class represents an employee entity in the system.
+ * Each employee has an email, password, and an active status.
+ * It also has a list of used vacations and vacations.
  */
 @Entity
 @Table(name = "employee")
@@ -32,76 +34,146 @@ public class Employee implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+
+    /**
+     * The email address of the employee, which is the unique identifier for each employee.
+     */
     @Id
     @Basic(optional = false)
     @Nonnull
   //  @Size(min = 1, max = 40)
     @Column(name = "email")
     private String email;
+
+    /**
+     * The password of the employee, which is used for authentication.
+     */
     @Basic(optional = false)
     @Nonnull
    // @Size(min = 1, max = 40)
     @Column(name = "password")
     private String password;
 
+    /**
+     * The active status of the employee.
+     */
     @Basic(optional = false)
     @Nonnull
     @Column(name = "active")
     private boolean active;
 
+    /**
+     * The list of used vacations for the employee.
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "email")
     private List<UsedVacations> usedVacationsList;
+
+    /**
+     * The list of vacations for the employee.
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
     private List<Vacations> vacationsList;
 
+    /**
+     * Constructs a new Employee object with no parameters.
+     */
     public Employee() {
     }
 
+    /**
+     * Constructs a new Employee object with the given email address.
+     * @param email The email address of the employee.
+     */
     public Employee(String email) {
         this.email = email;
     }
 
+    /**
+     * Constructs a new Employee object with the given email address and password.
+     * @param email The email address of the employee.
+     * @param password The password of the employee.
+     */
     public Employee(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
+    /**
+     * Returns the active status of the employee.
+     * @return The active status of the employee.
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * Sets the active status of the employee.
+     * @param active The active status of the employee.
+     */
     public void setActive(boolean active) {
         this.active = active;
     }
 
+    /**
+     * Returns the email address of the employee.
+     * @return The email address of the employee.
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets the email address of the employee.
+     * @param email The email address of the employee.
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * Returns the password of the employee.
+     * @return The password of the employee.
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Sets the password of the employee.
+     * @param password The password of the employee.
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * Returns the list of used vacations for the employee.
+     * @return The list of used vacations for the employee.
+     */
     public List<UsedVacations> getUsedVacationsList() {
         return usedVacationsList;
     }
 
+    /**
+     * Sets the list of used vacations for the employee.
+     * @param usedVacationsList list of used vacations for the employee.
+     */
     public void setUsedVacationsList(List<UsedVacations> usedVacationsList) {
         this.usedVacationsList = usedVacationsList;
     }
 
+    /**
+     * Returns the list of vacations for the employee.
+     * @return The list of vacations for the employee.
+     */
     public List<Vacations> getVacationsList() {
         return vacationsList;
     }
 
+    /**
+     * Sets the list of vacations for the employee.
+     * @param vacationsList The list of vacations for the employee.
+     */
     public void setVacationsList(List<Vacations> vacationsList) {
         this.vacationsList = vacationsList;
     }

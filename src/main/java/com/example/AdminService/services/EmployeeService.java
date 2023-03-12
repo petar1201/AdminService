@@ -19,12 +19,22 @@ import java.util.Optional;
 import java.util.Scanner;
 import com.opencsv.CSVReader;
 
+
+/**
+ * EmployeeService class implements EmployeeInterface and provides
+ * methods for adding and removing employee profiles.
+ */
 @Service
 public class EmployeeService implements EmployeeInterface {
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    /**
+     * Adds employee profiles to the database from a CSV file.
+     * @param path the path of the CSV file.
+     * @throws IllegalStateException if the CSV file is not found.
+     */
     @Override
     public void addEmployeeProfiles(String path) {
 
@@ -35,8 +45,8 @@ public class EmployeeService implements EmployeeInterface {
             sc.useDelimiter("\n");
             while (sc.hasNext())  //returns a boolean value
             {   String line = sc.next();
-                String email = line.split(",")[0];
-                String password = line.split(",")[1];
+                String email = line.split(",")[0].trim();
+                String password = line.split(",")[1].trim();
                 if(email.equals("Employee Email"))continue;
                 addSingleEmployee(email, password);
             }
@@ -47,17 +57,27 @@ public class EmployeeService implements EmployeeInterface {
 
     }
 
+    /**
+     * Adds a single employee profile to the database.
+     * @param email the email of the employee.
+     * @param password the password of the employee.
+     */
     @Override
     public void addSingleEmployee(String email, String password) {
-        Employee employee = new Employee(ShaEncryptionGenerator.hashString(email),
-                ShaEncryptionGenerator.hashString(password));
+        Employee employee = new Employee(email,
+                password);
         employee.setActive(true);
         employeeRepository.saveAndFlush(employee);
     }
 
+    /**
+     * Removes an employee profile from the database.
+     * @param email the email of the employee to be removed.
+     * @throws IllegalStateException if the employee does not exist.
+     */
     @Override
     public void removeEmployee(String email) {
-        Optional<Employee> employee = employeeRepository.findById(ShaEncryptionGenerator.hashString(email));
+        Optional<Employee> employee = employeeRepository.findById(email);
         if(employee.isPresent()) {
             if(employee.get().isActive()) {
                 employee.get().setActive(false);

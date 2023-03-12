@@ -18,7 +18,8 @@ import jakarta.annotation.Nonnull;
 //import jakarta.validation.constraints.Size;
 
 /**
- *
+ * The Admin class represents an administrator user in the system.
+ * It contains information about the admin's username, password, and active status.
  * @author petar
  */
 @Entity
@@ -30,55 +31,101 @@ import jakarta.annotation.Nonnull;
 public class Admin implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * The username of the admin.
+     */
     @Id
     @Basic(optional = false)
     @Nonnull
     //@Size(min = 1, max = 40)
     @Column(name = "username")
     private String username;
+
+    /**
+     * The password of the admin.
+     */
     @Basic(optional = false)
     @Nonnull
    // @Size(min = 1, max = 40)
     @Column(name = "password")
     private String password;
 
+    /**
+     * The active status of the admin.
+     */
     @Basic(optional = false)
     @Nonnull
     @Column(name = "active")
     private boolean active;
 
+    /**
+     * Creates an empty Admin object.
+     */
     public Admin() {
     }
 
+    /**
+     * Creates an Admin object with the specified username.
+     * @param username the username of the admin
+     */
     public Admin(String username) {
         this.username = username;
     }
 
+    /**
+     * Creates an Admin object with the specified username and password.
+     * @param username the username of the admin
+     * @param password the password of the admin
+     */
     public Admin(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Returns the active status of the admin.
+     * @return the active status of the admin
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * Sets the active status of the admin.
+     * @param active the active status of the admin
+     */
     public void setActive(boolean active) {
         this.active = active;
     }
 
+    /**
+     * Returns the username of the admin.
+     * @return the username of the admin
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Sets the username of the admin.
+     * @param username the username of the admin
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Returns the password of the admin.
+     * @return the password of the admin
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Sets the password of the admin.
+     * @param password the password of the admin
+     */
     public void setPassword(String password) {
         this.password = password;
     }

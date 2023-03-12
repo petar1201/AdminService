@@ -12,19 +12,29 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-
+/**
+ * The AdminService class implements the AdminInterface and provides methods for managing admins.
+ * @author petar
+ */
 @Service
 public class AdminService implements AdminInterface {
 
     @Autowired
     private AdminRepository adminRepository;
 
-
+    /**
+     * Adds a new admin to the system with a generated API key and token.
+     */
     @Override
     public void addAdmin() {
         adminRepository.saveAndFlush(new Admin(ApiKeyGenerator.generateApiKey(), TokenGenerator.generateToken() ));
     }
 
+    /**
+     * Removes an admin from the system by setting their status to inactive.
+     * @param username the username of the admin to remove
+     * @throws IllegalStateException if the admin is deleting themselves or if the admin cannot be found
+     */
     @Override
     public void removeAdmin(String username) {
         Optional<Admin> admin = adminRepository.findById(username);
