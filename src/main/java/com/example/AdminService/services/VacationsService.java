@@ -81,41 +81,20 @@ public class VacationsService implements VacationsInterface {
         if(employee.isPresent()){
 
             List<Vacations> vacations = vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(year,email);
-            for(Vacations v: vacations){
-                if(v.getTotalDays()-v.getUsedDays()>=days){
-                    v.setUsedDays(v.getUsedDays()+days);
-                    vacationsRepository.saveAndFlush(v);
-                    break;
-                }
-                else{
-                    int curYr=year-1;
-                    long totalDays=0;
-                    long usedDays=0;
-                    long daysAvailable = v.getTotalDays()-v.getUsedDays();
-                    boolean okay = false;
-                    while(vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(curYr,email).size()>0){
-                        Vacations vacations1 = vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(curYr, email).get(0);
-                        totalDays = vacations1.getTotalDays();
-                        usedDays = vacations1.getUsedDays();
-                        if(totalDays-usedDays+daysAvailable>=days){
-                            okay=true;
-                            for(long i = year;i>=curYr;i--){
-                                vacations1 = vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(curYr, email).get(0);
-                                if(year!=curYr)vacations1.setUsedDays(vacations1.getTotalDays());
-                                else vacations1.setUsedDays(totalDays-(totalDays-usedDays+daysAvailable-days));
-                                vacationsRepository.saveAndFlush(vacations1);
-                            }
-                            break;
-                        }
-                        daysAvailable+= totalDays-usedDays;
-                        curYr--;
-                    }
-                    if(!okay){
-                        throw new IllegalStateException("Record od new used vacation days cant be added due to inefficient amount of days. Sorry, you need to work:(");
-                    }
-                }
-
+            if(vacations.size()==0){
+               //TODO addSingleRow(year, emaill, days);
+                //TODO ASK WHAT HAPPENS WHEN IMPORTING SOMETHING THAT IS NOT IN BASE
             }
+            for(Vacations v: vacations){
+                v.setUsedDays(v.getUsedDays()+days);
+                v.setTotalDays(v.getTotalDays()+days);
+                vacationsRepository.saveAndFlush(v);
+                //return;
+            }
+            //throw new IllegalStateException("Error when adding new record");
+        }
+        else{
+            throw new IllegalStateException("Employee doesnt exist, error when adding new record");
         }
     }
 }
