@@ -59,6 +59,12 @@ public class VacationsService implements VacationsInterface {
     public void addSingleRow(int year, String email, int days) {
         Optional<Employee> employee = employeeRepository.findById(ShaEncryptionGenerator.hashString(email));
         if(employee.isPresent()){
+            if(vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(year, ShaEncryptionGenerator.hashString(email)).size()>0){
+                Vacations vacations = vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(year, ShaEncryptionGenerator.hashString(email)).get(0);
+                vacations.setTotalDays(vacations.getTotalDays()+days);
+                vacationsRepository.saveAndFlush(vacations);
+                return;
+            }
             Vacations vacations = new Vacations();
             VacationsPK vacationsPK = new VacationsPK();
             vacationsPK.setYear(year);
@@ -82,8 +88,10 @@ public class VacationsService implements VacationsInterface {
 
             List<Vacations> vacations = vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(year,email);
             if(vacations.size()==0){
-               //TODO addSingleRow(year, emaill, days);
-                //TODO ASK WHAT HAPPENS WHEN IMPORTING SOMETHING THAT IS NOT IN BASE
+               addSingleRow(year, emaill, days);
+                vacations = vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(year,email);
+                vacations.get(0).setUsedDays(days);
+                return;
             }
             for(Vacations v: vacations){
                 v.setUsedDays(v.getUsedDays()+days);
