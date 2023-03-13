@@ -2,22 +2,16 @@ package com.example.AdminService.services;
 
 
 import com.example.AdminService.entities.Employee;
-import com.example.AdminService.generators.ShaEncryptionGenerator;
 import com.example.AdminService.interfaces.repositories.EmployeeRepository;
 import com.example.AdminService.interfaces.service.EmployeeInterface;
-import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import com.opencsv.CSVReader;
 
 
 /**
@@ -29,6 +23,9 @@ public class EmployeeService implements EmployeeInterface {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Adds employee profiles to the database from a CSV file.
@@ -65,7 +62,7 @@ public class EmployeeService implements EmployeeInterface {
     @Override
     public void addSingleEmployee(String email, String password) {
         Employee employee = new Employee(email,
-                password);
+                passwordEncoder.encode(password));
         employee.setActive(true);
         employeeRepository.saveAndFlush(employee);
     }

@@ -2,26 +2,20 @@ package com.example.AdminService.services;
 
 import com.example.AdminService.entities.Employee;
 import com.example.AdminService.entities.UsedVacations;
-import com.example.AdminService.generators.ShaEncryptionGenerator;
 import com.example.AdminService.interfaces.repositories.EmployeeRepository;
 import com.example.AdminService.interfaces.repositories.UsedVacationsRepository;
 import com.example.AdminService.interfaces.service.UsedVacationsInterface;
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.sql.Date;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.Month;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Scanner;
 
