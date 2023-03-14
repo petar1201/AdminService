@@ -31,10 +31,10 @@ public class AdminInitializer implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception {
-        String plainPassword = "petar@rbt.rs";
+        String plainPassword = "admin";
         String encodedPassword = passwordEncoder.encode(plainPassword);
         Admin adminUser = new Admin();
-        adminUser.setUsername("admin");
+        adminUser.setUsername("petar@rbt.rs");
         adminUser.setPassword(encodedPassword);
         adminRepository.saveAndFlush(adminUser);
     }

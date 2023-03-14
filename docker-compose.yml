@@ -1,0 +1,30 @@
+version: '3.1'
+services:
+  adminapp:
+    container_name: admin-service-container
+    image: admin-service-image
+    build: ./
+    ports:
+      - "8080:8080"
+    depends_on:
+      - pg
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg:5432/VacationTracker
+  employeeapp:
+    container_name: employee-service-container
+    image: employee-service-image
+    build: /Users/petar/Desktop/TehnicalTaskRBT/EmployeeService
+    ports:
+      - "8082:8082"
+    depends_on:
+      - pg
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg:5432/VacationTracker
+  pg:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=VacationTracker
