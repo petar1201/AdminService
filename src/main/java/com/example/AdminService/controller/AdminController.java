@@ -21,7 +21,7 @@ public class AdminController {
     /**
      * Path to folder where sample files are
      */
-    private final String samplePath="C:\\Users\\petar\\Desktop\\TehnicalTaskRBT\\AdminService\\src\\main\\resources\\file\\";
+    private final String samplePath="C:\\Users\\petar\\Desktop\\TehnicalTaskRBT\\AdminService\\src\\main\\resources\\samples\\";
 
     @Autowired
     private AdminService adminService;
