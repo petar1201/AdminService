@@ -7,6 +7,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * AdminInitilazer is a class implementing CommandLineRunner
+ * Used to add admin when booting aplication
+ * admin petar@rbt.rs with password admin can be used as default admin
+ */
 @Component
 public class AdminInitializer implements CommandLineRunner {
 
@@ -16,9 +22,16 @@ public class AdminInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     *
+     * run method will run when booting spring application
+     * it creates Instance of Entity Admin and adds it to DataBase
+     * @param args
+     * @throws Exception
+     */
     @Override
     public void run(String... args) throws Exception {
-        String plainPassword = "admin";
+        String plainPassword = "petar@rbt.rs";
         String encodedPassword = passwordEncoder.encode(plainPassword);
         Admin adminUser = new Admin();
         adminUser.setUsername("admin");
