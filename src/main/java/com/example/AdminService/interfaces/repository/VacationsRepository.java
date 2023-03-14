@@ -1,7 +1,7 @@
-package com.example.AdminService.interfaces.repositories;
+package com.example.AdminService.interfaces.repository;
 
-import com.example.AdminService.entities.Vacations;
-import com.example.AdminService.entities.VacationsPK;
+import com.example.AdminService.entity.Vacations;
+import com.example.AdminService.entity.VacationsPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,6 +1,6 @@
-package com.example.AdminService.interfaces.repositories;
+package com.example.AdminService.interfaces.repository;
 
-import com.example.AdminService.entities.Admin;
+import com.example.AdminService.entity.Admin;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

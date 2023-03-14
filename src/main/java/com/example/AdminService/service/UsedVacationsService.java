@@ -1,9 +1,9 @@
-package com.example.AdminService.services;
+package com.example.AdminService.service;
 
-import com.example.AdminService.entities.Employee;
-import com.example.AdminService.entities.UsedVacations;
-import com.example.AdminService.interfaces.repositories.EmployeeRepository;
-import com.example.AdminService.interfaces.repositories.UsedVacationsRepository;
+import com.example.AdminService.entity.Employee;
+import com.example.AdminService.entity.UsedVacations;
+import com.example.AdminService.interfaces.repository.EmployeeRepository;
+import com.example.AdminService.interfaces.repository.UsedVacationsRepository;
 import com.example.AdminService.interfaces.service.UsedVacationsInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,10 +48,17 @@ public class UsedVacationsService implements UsedVacationsInterface{
         try{
             Scanner sc = new Scanner(new File(path));
             sc.useDelimiter("\n");
+            boolean flag = false;
             while (sc.hasNext())  //returns a boolean value
             {   String line = sc.next().trim().replaceAll("\n$", "");
                 String[] fields = line.split(",");
-                if(fields[0].equals("Employee"))continue;
+                if(fields[0].equals("Employee")){
+                    flag = true;
+                    continue;
+                }
+                else{
+                    if(!flag)throw new IllegalStateException("Bad Form of CSV file");
+                }
                 String email = fields[0];
                 String monthDayS = fields[2].trim();
                 String year1 = fields[3].replaceAll("^\"|\"$", "").trim();

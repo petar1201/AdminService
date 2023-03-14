@@ -1,14 +1,13 @@
-package com.example.AdminService.services;
+package com.example.AdminService.service;
 
-import com.example.AdminService.entities.Admin;
-import com.example.AdminService.entities.Employee;
-import com.example.AdminService.generators.ApiKeyGenerator;
-import com.example.AdminService.generators.TokenGenerator;
-import com.example.AdminService.interfaces.repositories.AdminRepository;
-import com.example.AdminService.interfaces.repositories.EmployeeRepository;
+import com.example.AdminService.entity.Admin;
+import com.example.AdminService.interfaces.repository.AdminRepository;
 import com.example.AdminService.interfaces.service.AdminInterface;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -20,14 +19,24 @@ import java.util.Optional;
 public class AdminService implements AdminInterface {
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private AdminRepository adminRepository;
+
+    public Admin findAdminByUserName(String username){
+        Optional<Admin> byId = adminRepository.findById(username);
+        if(byId.isPresent())return byId.get();
+        return null;
+    }
+
 
     /**
      * Adds a new admin to the system with a generated API key and token.
      */
     @Override
-    public void addAdmin() {
-        adminRepository.saveAndFlush(new Admin(ApiKeyGenerator.generateApiKey(), TokenGenerator.generateToken() ));
+    public void addAdmin(String username, String password) {
+        adminRepository.saveAndFlush(new Admin(username, passwordEncoder.encode(password) ));
     }
 
     /**

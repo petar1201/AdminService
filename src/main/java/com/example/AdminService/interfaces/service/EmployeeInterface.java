@@ -1,7 +1,5 @@
 package com.example.AdminService.interfaces.service;
 
-import com.example.AdminService.entities.Employee;
-
 /**
  * The EmployeeInterface provides methods for adding, removing, and managing employee profiles.
  * @author petar

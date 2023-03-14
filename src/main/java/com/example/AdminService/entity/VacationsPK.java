@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.AdminService.entities;
+package com.example.AdminService.entity;
 
 import java.io.Serializable;
 
@@ -11,7 +11,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Table;
 
 /**
  * The VacationsPK class is an Embeddable object that represents the primary key for the Vacations entity.

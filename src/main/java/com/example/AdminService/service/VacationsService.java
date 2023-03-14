@@ -1,10 +1,10 @@
-package com.example.AdminService.services;
+package com.example.AdminService.service;
 
-import com.example.AdminService.entities.Employee;
-import com.example.AdminService.entities.Vacations;
-import com.example.AdminService.entities.VacationsPK;
-import com.example.AdminService.interfaces.repositories.EmployeeRepository;
-import com.example.AdminService.interfaces.repositories.VacationsRepository;
+import com.example.AdminService.entity.Employee;
+import com.example.AdminService.entity.Vacations;
+import com.example.AdminService.entity.VacationsPK;
+import com.example.AdminService.interfaces.repository.EmployeeRepository;
+import com.example.AdminService.interfaces.repository.VacationsRepository;
 import com.example.AdminService.interfaces.service.VacationsInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,12 +47,12 @@ public class VacationsService implements VacationsInterface {
             {   String nextLine = sc.next();
                 String email = nextLine.split(",")[0];
                 String days = nextLine.split(",")[1];
-                if(email.equals("Employee"))continue;
                 if(email.equals("Vacation year")){
                     year=Integer.parseInt(""+days.charAt(0)+days.charAt(1)+days.charAt(2)+days.charAt(3));
                     continue;
                 }
-                if(year == -1)throw new IllegalStateException("Bad header, unknown year");
+                if(email.equals("Employee") && year!=-1)continue;
+                if(year == -1)throw new IllegalStateException("Bad Form of CSV file");
                 addSingleRow(year, email, Integer.parseInt(days.trim().replaceAll("\n$", "")));
             }
             sc.close();
@@ -76,6 +76,7 @@ public class VacationsService implements VacationsInterface {
             if(vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(year, email).size()>0){
                 Vacations vacations = vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(year, email).get(0);
                 vacations.setTotalDays(vacations.getTotalDays()+days);
+                vacations.setUsedDays(vacations.getUsedDays()+days);
                 vacationsRepository.saveAndFlush(vacations);
                 return;
             }
@@ -113,6 +114,7 @@ public class VacationsService implements VacationsInterface {
                addSingleRow(year, emaill, days);
                 vacations = vacationsRepository.findByVacationsPKYearIsAndVacationsPKEmailIs(year,email);
                 vacations.get(0).setUsedDays(days);
+                vacationsRepository.saveAndFlush(vacations.get(0));
                 return;
             }
             for(Vacations v: vacations){

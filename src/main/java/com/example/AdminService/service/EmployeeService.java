@@ -1,8 +1,8 @@
-package com.example.AdminService.services;
+package com.example.AdminService.service;
 
 
-import com.example.AdminService.entities.Employee;
-import com.example.AdminService.interfaces.repositories.EmployeeRepository;
+import com.example.AdminService.entity.Employee;
+import com.example.AdminService.interfaces.repository.EmployeeRepository;
 import com.example.AdminService.interfaces.service.EmployeeInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,11 +40,18 @@ public class EmployeeService implements EmployeeInterface {
         try{
             Scanner sc = new Scanner(new File(path));
             sc.useDelimiter("\n");
+            boolean flag = false;
             while (sc.hasNext())  //returns a boolean value
             {   String line = sc.next();
                 String email = line.split(",")[0].trim();
                 String password = line.split(",")[1].trim();
-                if(email.equals("Employee Email"))continue;
+                if(email.equals("Employee Email")){
+                    flag = true;
+                    continue;
+                }
+                else{
+                    if(!flag)throw new IllegalStateException("Bad form of of CSV file");
+                }
                 addSingleEmployee(email, password);
             }
             sc.close();

@@ -1,10 +1,10 @@
-package com.example.AdminService.controllers;
+package com.example.AdminService.controller;
 
 
-import com.example.AdminService.services.AdminService;
-import com.example.AdminService.services.EmployeeService;
-import com.example.AdminService.services.UsedVacationsService;
-import com.example.AdminService.services.VacationsService;
+import com.example.AdminService.service.AdminService;
+import com.example.AdminService.service.EmployeeService;
+import com.example.AdminService.service.UsedVacationsService;
+import com.example.AdminService.service.VacationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path="api/admin")
 public class AdminController {
+
+    private final String samplePath="C:\\Users\\petar\\Desktop\\TehnicalTaskRBT\\AdminService\\src\\main\\resources\\file\\";
+
     @Autowired
     private AdminService adminService;
 
@@ -32,13 +35,15 @@ public class AdminController {
 
     /**
      * Creates a new admin account.
-     *
+     * @param username username of admin to be added
+     * @param password password of admin to be added
      * @return String message indicating that a new admin account has been created.
      */
     @PostMapping(path="new")
     @ResponseBody
-    public String createNewAdmin(){
-        adminService.addAdmin();
+    public String createNewAdmin(@RequestParam(name = "username", required = true) String username,
+                                 @RequestParam(name="password", required = true) String password){
+        adminService.addAdmin(username,password);
         return "New Admin created";
     }
 
@@ -49,8 +54,9 @@ public class AdminController {
      */
     @DeleteMapping(path="delete")
     @ResponseBody
-    public String deleteAdminSelf(){
-        adminService.removeAdmin("admin");
+    public String deleteAdmin(@RequestParam(name = "username", required = true) String username
+                              ){
+        adminService.removeAdmin(username);
         return "Admin deleted";
     }
 
@@ -78,7 +84,7 @@ public class AdminController {
     @PostMapping(path="employee/import")
     @ResponseBody
     public String importEmployeesFromCsv(@RequestParam(name="path", required = true) String path){
-        employeeService.addEmployeeProfiles(path);
+        employeeService.addEmployeeProfiles(samplePath+path);
         return "Employees loaded";
     }
 
@@ -126,7 +132,7 @@ public class AdminController {
     public String  importVacationDaysForYearForEmployee(
             @RequestParam(name="path", required = true)String path
     ){
-        vacationsService.addDaysPerYearPerEmployee(path);
+        vacationsService.addDaysPerYearPerEmployee(samplePath+path);
         return "New data for Employees loaded";
     }
 
@@ -177,7 +183,7 @@ public class AdminController {
     public String  importUsedVacationDays(
             @RequestParam(name="path", required = true)String path
     ){
-        usedVacationsService.addUsedDaysPerYearPerEmployee(path);
+        usedVacationsService.addUsedDaysPerYearPerEmployee(samplePath+path);
         return "New data for Employees loaded";
     }
 

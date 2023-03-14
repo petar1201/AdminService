@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.AdminService.entities;
+package com.example.AdminService.entity;
 
 import java.io.Serializable;
 import jakarta.persistence.Basic;

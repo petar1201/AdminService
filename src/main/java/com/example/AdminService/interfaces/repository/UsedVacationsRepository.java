@@ -1,6 +1,6 @@
-package com.example.AdminService.interfaces.repositories;
+package com.example.AdminService.interfaces.repository;
 
-import com.example.AdminService.entities.UsedVacations;
+import com.example.AdminService.entity.UsedVacations;
 import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * The UsedVacationsRepository interface extends the JpaRepository interface, and provides
