@@ -92,7 +92,7 @@ public class AdminController {
     public String importEmployeesFromCsv(@RequestParam(name="path", required = true) String path){
         String SAMPLES_PATH = SAMPLE_PATH;
         if(SAMPLES_PATH.startsWith("/")){
-            SAMPLES_PATH = "src\\main\\resources\\samples\\";
+            SAMPLES_PATH = "/app/samples/";
         }
 
         employeeService.addEmployeeProfiles(SAMPLES_PATH+path);
@@ -145,7 +145,7 @@ public class AdminController {
     ){
         String SAMPLES_PATH = SAMPLE_PATH;
         if(SAMPLES_PATH.startsWith("/")){
-            SAMPLES_PATH = "src\\main\\resources\\samples\\";
+            SAMPLES_PATH = "/app/samples/";
         }
         vacationsService.addDaysPerYearPerEmployee(SAMPLES_PATH+path);
         return "New data for Employees loaded";
@@ -200,7 +200,7 @@ public class AdminController {
     ){
         String SAMPLES_PATH = SAMPLE_PATH;
         if(SAMPLES_PATH.startsWith("/")){
-            SAMPLES_PATH = "src\\main\\resources\\samples\\";
+            SAMPLES_PATH = "/app/samples/";
         }
         usedVacationsService.addUsedDaysPerYearPerEmployee(SAMPLES_PATH+path);
         return "New data for Employees loaded";
