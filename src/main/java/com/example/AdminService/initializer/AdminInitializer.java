@@ -7,6 +7,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.net.URL;
+import java.net.URLDecoder;
+
 
 /**
  * AdminInitilazer is a class implementing CommandLineRunner

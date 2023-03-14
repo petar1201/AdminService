@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path="api/admin")
 public class AdminController {
 
+
+    private final String PROJ_PATH = System.getProperty("user.dir");
+    private final String SAMPLE_PATH = PROJ_PATH+"\\src\\main\\resources\\samples\\";
+
     /**
      * Path to folder where sample files are
      */
-    private final String samplePath="C:\\Users\\petar\\Desktop\\TehnicalTaskRBT\\AdminService\\src\\main\\resources\\samples\\";
 
     @Autowired
     private AdminService adminService;
@@ -87,7 +90,12 @@ public class AdminController {
     @PostMapping(path="employee/import")
     @ResponseBody
     public String importEmployeesFromCsv(@RequestParam(name="path", required = true) String path){
-        employeeService.addEmployeeProfiles(samplePath+path);
+        String SAMPLES_PATH = SAMPLE_PATH;
+        if(SAMPLES_PATH.startsWith("/")){
+            SAMPLES_PATH = "src\\main\\resources\\samples\\";
+        }
+
+        employeeService.addEmployeeProfiles(SAMPLES_PATH+path);
         return "Employees loaded";
     }
 
@@ -135,7 +143,11 @@ public class AdminController {
     public String  importVacationDaysForYearForEmployee(
             @RequestParam(name="path", required = true)String path
     ){
-        vacationsService.addDaysPerYearPerEmployee(samplePath+path);
+        String SAMPLES_PATH = SAMPLE_PATH;
+        if(SAMPLES_PATH.startsWith("/")){
+            SAMPLES_PATH = "src\\main\\resources\\samples\\";
+        }
+        vacationsService.addDaysPerYearPerEmployee(SAMPLES_PATH+path);
         return "New data for Employees loaded";
     }
 
@@ -186,7 +198,11 @@ public class AdminController {
     public String  importUsedVacationDays(
             @RequestParam(name="path", required = true)String path
     ){
-        usedVacationsService.addUsedDaysPerYearPerEmployee(samplePath+path);
+        String SAMPLES_PATH = SAMPLE_PATH;
+        if(SAMPLES_PATH.startsWith("/")){
+            SAMPLES_PATH = "src\\main\\resources\\samples\\";
+        }
+        usedVacationsService.addUsedDaysPerYearPerEmployee(SAMPLES_PATH+path);
         return "New data for Employees loaded";
     }
 
