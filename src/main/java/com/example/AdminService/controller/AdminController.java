@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path="api/admin")
 public class AdminController {
 
+    /**
+     * Path to folder where sample files are
+     */
     private final String samplePath="C:\\Users\\petar\\Desktop\\TehnicalTaskRBT\\AdminService\\src\\main\\resources\\file\\";
 
     @Autowired

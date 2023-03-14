@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/***
+ * Class Used in proccess of Authorization to store login credentials
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

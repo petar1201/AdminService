@@ -22,8 +22,14 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
+
+/**
+ * This class is responsible for configuring the security settings of the AdminService application.
+ */
 @Configuration
 public class SecurityConfig {
+
+
     @Autowired
     private AuthenticationManager authenticationManager;
     private final AuthSuccessHandler authSuccessHandler;
@@ -34,14 +40,26 @@ public class SecurityConfig {
     private PasswordEncoder passwordEncoder;
 
 
-
+    /**
+     * Constructor for the SecurityConfig class.
+     *
+     * @param authSuccessHandler    the authentication success handler for the application
+     * @param jwtUserDetailsService the user details service for JWT authentication
+     * @param secret                the secret key used to sign and verify JWT tokens
+     */
     public SecurityConfig(AuthSuccessHandler authSuccessHandler, JwtUserDetailsService jwtUserDetailsService, @Value("${jwt.secret}") String secret) {
         this.authSuccessHandler = authSuccessHandler;
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.secret = secret;
     }
 
-
+    /**
+     * Configures the security filter chain for the application.
+     *
+     * @param http the HttpSecurity object to configure
+     * @return a SecurityFilterChain object representing the configured filter chain
+     * @throws Exception if an error occurs while configuring the filter chain
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
@@ -69,12 +87,18 @@ public class SecurityConfig {
     }
 
 
-    @Bean JsonObjectAuthenticationFilter authenticationFilter()throws Exception{
+    /**
+     * Creates a new instance of the JsonObjectAuthenticationFilter.
+     *
+     * @return a JsonObjectAuthenticationFilter object
+     * @throws Exception if an error occurs while creating the filter
+     */
+    @Bean
+    public JsonObjectAuthenticationFilter authenticationFilter()throws Exception{
         JsonObjectAuthenticationFilter filter = new JsonObjectAuthenticationFilter();
         filter.setAuthenticationSuccessHandler(authSuccessHandler);
         filter.setAuthenticationManager(authenticationManager);
         return filter;
-
 
     }
 }
