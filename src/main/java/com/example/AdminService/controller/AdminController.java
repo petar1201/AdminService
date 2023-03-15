@@ -20,7 +20,9 @@ public class AdminController {
 
 
     private final String PROJ_PATH = System.getProperty("user.dir");
-    private final String SAMPLE_PATH = PROJ_PATH+"\\src\\main\\resources\\samples\\";
+    private final String SAMPLE_PATH_WINDOWS = PROJ_PATH+"\\src\\main\\resources\\samples\\";
+    private final String SAMPLE_PATH_UNIXLIKE = PROJ_PATH + "/src/main/resources/samples/";
+
 
     /**
      * Path to folder where sample files are
@@ -90,10 +92,14 @@ public class AdminController {
     @PostMapping(path="employee/import")
     @ResponseBody
     public String importEmployeesFromCsv(@RequestParam(name="path", required = true) String path){
-        String SAMPLES_PATH = SAMPLE_PATH;
-        if(SAMPLES_PATH.startsWith("/")){
+        String SAMPLES_PATH = "";
+        if(PROJ_PATH.equals("/")){
             SAMPLES_PATH = "/app/samples/";
         }
+        else if(PROJ_PATH.contains("/")){
+            SAMPLES_PATH = SAMPLE_PATH_UNIXLIKE;
+        }
+        else SAMPLES_PATH=SAMPLE_PATH_WINDOWS;
 
         employeeService.addEmployeeProfiles(SAMPLES_PATH+path);
         return "Employees loaded";
@@ -143,10 +149,14 @@ public class AdminController {
     public String  importVacationDaysForYearForEmployee(
             @RequestParam(name="path", required = true)String path
     ){
-        String SAMPLES_PATH = SAMPLE_PATH;
-        if(SAMPLES_PATH.startsWith("/")){
+        String SAMPLES_PATH = "";
+        if(PROJ_PATH.equals("/")){
             SAMPLES_PATH = "/app/samples/";
         }
+        else if(PROJ_PATH.contains("/")){
+            SAMPLES_PATH = SAMPLE_PATH_UNIXLIKE;
+        }
+        else SAMPLES_PATH=SAMPLE_PATH_WINDOWS;
         vacationsService.addDaysPerYearPerEmployee(SAMPLES_PATH+path);
         return "New data for Employees loaded";
     }
@@ -198,10 +208,14 @@ public class AdminController {
     public String  importUsedVacationDays(
             @RequestParam(name="path", required = true)String path
     ){
-        String SAMPLES_PATH = SAMPLE_PATH;
-        if(SAMPLES_PATH.startsWith("/")){
+        String SAMPLES_PATH = "";
+        if(PROJ_PATH.equals("/")){
             SAMPLES_PATH = "/app/samples/";
         }
+        else if(PROJ_PATH.contains("/")){
+            SAMPLES_PATH = SAMPLE_PATH_UNIXLIKE;
+        }
+        else SAMPLES_PATH=SAMPLE_PATH_WINDOWS;
         usedVacationsService.addUsedDaysPerYearPerEmployee(SAMPLES_PATH+path);
         return "New data for Employees loaded";
     }

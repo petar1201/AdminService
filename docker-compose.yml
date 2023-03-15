@@ -13,7 +13,7 @@ services:
   employeeapp:
     container_name: employee-service-container
     image: employee-service-image
-    build: /Users/petar/Desktop/TehnicalTaskRBT/EmployeeService
+    build: ../EmployeeService
     ports:
       - "8082:8082"
     depends_on:
