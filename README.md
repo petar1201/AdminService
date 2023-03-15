@@ -37,7 +37,7 @@ Services endpoints are:
 8. /api/admin/usedVacations/new - Adds a single record of used vacation days with form param email representing for which employee used days are, form param start date, and form param end date(Strings in format dd yy mmmm)..
 9. /api/admin/usedVacation/import - Imports data described in the previous endpoint with form param path, which is the name of the CSV file.
 
-All of the endpoints are protected. So, when an admin wants to do any of this, they first need to access @POST http://localhost:8080/login and send their email and password. If the credentials are good, the admin will be provided with a token that they can use to access any endpoint. They just need to add bearer token authorization to the header with the token they got from logging in.
+All of the endpoints are protected. So, when an admin wants to do any of this, they first need to access @POST http://localhost:8080/login and send their username and password as json form {"email":"value", "password":"value"}. If the credentials are good, the admin will be provided with a token that they can use to access any endpoint. They just need to add bearer token authorization to the header with the token they got from logging in.
 
 ## Author
 petar3747@gmail.com
